@@ -1,0 +1,35 @@
+[package]
+name = "arcrelay-transfer"
+version = "0.1.0"
+edition = "2021"
+license = "AGPL-3.0-only"
+publish = false
+
+[dependencies]
+arcrelay-content = { version = "0.1.0", git = "https://github.com/ArcRelayProject/arcrelay-content.git", rev = "a4b00f20f1e03c2905abe9bae36c601fb7683e1c" }
+tokio-util = { version = "0.7", features = ["rt"] }
+ts-rs = { version = "12", features = ["serde-json-impl", "chrono-impl", "uuid-impl", "no-serde-warnings"] }
+arcrelay-wire = { version = "0.1.0", git = "https://github.com/ArcRelayProject/arcrelay-wire.git", rev = "ac143db0e09039d7eeaf211f1399141086716533" }
+arcrelay-transport = { version = "0.1.0", git = "https://github.com/ArcRelayProject/arcrelay-transport.git", rev = "16305821fea3778e3fc544f0e57eb3b5b51fec11" }
+arcrelay-network = { version = "0.1.0", git = "https://github.com/ArcRelayProject/arcrelay-network.git", rev = "45778f0595571be3cd6d7bfc1657d71e0ba9d8b1" }
+arcrelay-peer = { version = "0.1.0", git = "https://github.com/ArcRelayProject/arcrelay-peer.git", rev = "739e41c49020cf19f0d490c64143e68e995aef83" }
+async-trait = "0.1"
+base64 = "0.22"
+bytes = "1"
+hostname = "0.4"
+image = { version = "0.25", default-features = false, features = ["jpeg", "png", "gif", "webp"] }
+fs2 = "0.4"
+prost = "0.13"
+quinn = { version = "0.11.11", default-features = false, features = ["runtime-tokio", "rustls-ring"] }
+rand = "0.8"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+thiserror = "2"
+tokio = { version = "1", features = ["fs", "io-util", "macros", "rt-multi-thread", "sync", "time"] }
+tracing = "0.1"
+unicode-normalization = "0.1"
+uuid = { version = "1", features = ["v4"] }
+
+[dev-dependencies]
+tempfile = "3"
