@@ -305,10 +305,6 @@ async fn receiver_cancellation_stops_an_in_progress_transfer_on_both_sides() {
         .start_without_discovery(right_network.clone())
         .await
         .unwrap();
-    right
-        .set_receive_policy(&left_network.device_id().to_string(), true)
-        .await
-        .unwrap();
     left.upsert_peer(network_peer(&right_network, "Receiver"))
         .await
         .unwrap();
@@ -326,10 +322,7 @@ async fn receiver_cancellation_stops_an_in_progress_transfer_on_both_sides() {
         loop {
             if let Some(transfer) = right.snapshot().await.transfers.iter().find(|transfer| {
                 transfer.direction == TransferDirection::Receiving
-                    && matches!(
-                        transfer.status,
-                        TransferStatus::Connecting | TransferStatus::Transferring
-                    )
+                    && transfer.status == TransferStatus::AwaitingApproval
             }) {
                 break transfer.id.clone();
             }
@@ -345,6 +338,20 @@ async fn receiver_cancellation_stops_an_in_progress_transfer_on_both_sides() {
             right.snapshot().await.transfers
         ),
     };
+
+    left.jobs
+        .lock()
+        .await
+        .get(&outgoing_id)
+        .cloned()
+        .unwrap()
+        .pause()
+        .await;
+    right
+        .respond_incoming(&incoming_id, true, false)
+        .await
+        .unwrap();
+    wait_for_transfer_status(&right, &incoming_id, TransferStatus::Transferring).await;
 
     right.cancel(&incoming_id).await.unwrap();
     wait_for_transfer_status(&left, &outgoing_id, TransferStatus::Cancelled).await;

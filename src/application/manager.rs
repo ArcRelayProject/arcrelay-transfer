@@ -92,7 +92,7 @@ impl JobControl {
         }
     }
 
-    async fn pause(&self) {
+    pub(crate) async fn pause(&self) {
         self.paused.store(true, Ordering::Release);
     }
     async fn resume(&self) {
